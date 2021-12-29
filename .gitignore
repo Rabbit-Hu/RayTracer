@@ -1,0 +1,7 @@
+/大作业要求.pdf
+/output_bka
+/resources
+/.vscode
+
+**/build/**
+**/.DS_Store

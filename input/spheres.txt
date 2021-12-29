@@ -1,0 +1,129 @@
+samp 10
+
+camera
+    origin 10 0 1.8
+    direction -1 0 -0.185
+    up 0 0 1
+    angle 40
+    width 50
+    height 50
+end
+
+sphere
+    position 0 0 0
+    radius 1
+    material
+        Kd 0 0.05 0.15
+        # Ke 1 0 0
+        Ni 1.5
+        Ka 0.5 0.95 0.95
+        Ns 8
+    end
+end
+
+sphere
+    position 1 1 1
+    radius 0.75
+    material
+        Kd 0 1 0
+        # Ke 0 1 0
+        Ni 1.45
+        Ns 8
+    end
+end
+
+sphere
+    position -1 1 -1
+    radius 0.75
+    material
+        Kd 1 0.8 0
+        # Ke 0 0 1
+        Ks 0.8 0.64 0
+        Ni 1000
+        Ns 8
+    end
+end
+
+sphere
+    position -1.5 -0.7 -0.7
+    radius 0.6
+    material
+        Kd 1 0 1
+        # Ke 0 0 1
+        Ni 1000
+        Ns 8
+    end
+end
+
+# front wall ("background" wall)
+plane
+    normal 1 0 0
+    offset -3
+    material
+        Kd 0.8 0.6 0.6
+        Ks 0 0 0
+        Ka 0 0 0
+        Ni 0
+    end
+end
+
+# back wall (wall behind camera)
+plane
+    normal 1 0 0
+    offset 13
+    material
+        Kd 0.6 0.6 0.6
+        Ks 0 0 0
+        Ka 0 0 0
+        Ni 10
+    end
+end
+
+# left wall
+plane
+    normal 0 1 0
+    offset -3
+    material
+        Kd 0.6 0.8 0.6
+        Ks 0 0 0
+        Ka 0 0 0
+        Ni 10
+    end
+end
+
+# right wall
+plane
+    normal 0 -1 0
+    offset -3
+    material
+        Kd 0.6 0.6 0.8
+        Ks 0 0 0
+        Ka 0 0 0
+        Ni 1000
+    end
+end
+
+# ceiling
+plane
+    normal 0 0 -1
+    offset -3
+    material
+        Kd 0 0 0
+        Ke 2 2 2
+        Ks 0 0 0
+        Ka 0 0 0
+        Ni 1000
+    end
+end
+
+# ground
+plane
+    normal 0 0 1
+    offset -3
+    material
+        Kd 0.12 0.1 0.15
+        Ks 0 0 0
+        Ka 0 0 0
+        Ni 1000
+    end
+end
