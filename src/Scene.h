@@ -20,7 +20,7 @@ class Scene {
 public:
     Camera camera;
     std::vector<Object *> objects;
-    int samp = 1000;
+    int samp = 1000, save_interval = 5;
 
     Scene() {}
     Scene(std::string fname) {
@@ -38,6 +38,9 @@ public:
             }
             else if (s == "samp") {
                 fin >> samp;
+            }
+            else if (s == "save_interval") {
+                fin >> save_interval;
             }
             else if (s == "sphere") {
                 auto *object = new Sphere();
@@ -185,7 +188,7 @@ public:
         if (coeff.inf_norm() < EPS) return Vector3f();
         return radiance(ray, depth, Xi) * coeff;
     }
-    Canvas *ray_trace(int h1, int h2, int w1, int w2) {
+    Canvas *ray_trace(int h1, int h2, int w1, int w2, int samp) {
         Canvas *canvas = new Canvas(w2 - w1, h2 - h1);
         for (int y = h1; y < h2; y++){
             auto start_time = std::chrono::high_resolution_clock::now();
@@ -214,7 +217,7 @@ public:
         }
         return canvas;
     }
-    Canvas *ray_trace() {
-        return ray_trace(0, camera.h, 0, camera.w);
+    Canvas *ray_trace(int samp) {
+        return ray_trace(0, camera.h, 0, camera.w, samp);
     }
 };

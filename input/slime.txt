@@ -1,12 +1,13 @@
-samp 5
+samp 100
+save_interval 1
 
 camera
     origin 20 -5 5
     direction -2 0.6 -0.30
     up 0 0 1
     angle 30
-    width 200
-    height 150
+    width 640
+    height 480
     focus_pos 0 0 2.5
     aperture 0.4
 end
