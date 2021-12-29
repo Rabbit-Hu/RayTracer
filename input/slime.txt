@@ -1,12 +1,12 @@
-samp 10
+samp 5
 
 camera
     origin 20 -5 5
     direction -2 0.6 -0.30
     up 0 0 1
     angle 30
-    width 160
-    height 120
+    width 200
+    height 150
     focus_pos 0 0 2.5
     aperture 0.4
 end
@@ -28,8 +28,11 @@ mesh ../meshes/paimon/paimon.obj
 sphere
     position 12 -1 2.2
     radius 1
+    up 0 0.3 1
+    right 0.6 1 0
     material
-        Kd 0.3 0.7 0.6
+        # Kd 0.3 0.7 0.6
+        map_Kd ../textures/slime_anemo.png
         Ke 0 0 0
         Ks 0 0 0
         Ni 1000

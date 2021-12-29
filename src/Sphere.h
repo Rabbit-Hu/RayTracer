@@ -13,6 +13,7 @@ class Sphere: public Object {
 public:
     Vector3f pos; // center
     double rad; // radius
+    Vector3f up = Vector3f(0, 0, 1), right = Vector3f(0, 1, 0);
     
     Sphere(): Object(SPHERE) {}
     ~Sphere() {}
@@ -31,6 +32,10 @@ public:
         ret.poc = ray.o + t * ray.d;
         ret.normal = (ret.poc - pos).normalized();
         ret.material = material;
+        ret.v = 1 - acos(dot(ret.normal, up)) / PI;
+        Vector3f flat = ret.normal - up * dot(ret.normal, up);
+        ret.u = atan2(dot(cross(right, flat), up), dot(right, flat)) / (2*PI);
+        // std::cout << "up = " << up << ", right = " << right << ", sin = " << cross(right, flat).norm() << ", cos = " << dot(right, flat) << std::endl;
         return ret;
     }
 
@@ -47,6 +52,8 @@ std::istream &operator >>(std::istream &fin, Sphere &sphere) {
         }
         if (s == "end") break;
         else if (s == "position") fin >> sphere.pos, _pos = true;
+        else if (s == "up") fin >> sphere.up;
+        else if (s == "right") fin >> sphere.right;
         else if (s == "material") {
             sphere.material.reset(new Material());
             fin >> *(sphere.material);
@@ -62,5 +69,7 @@ std::istream &operator >>(std::istream &fin, Sphere &sphere) {
         std::cerr << "Error: Sphere parameter missing: " + missing_str << std::endl;
         exit(-1);
     }
+    sphere.up = sphere.up.normalized();
+    sphere.right = (sphere.right - sphere.up * dot(sphere.up, sphere.right)).normalized();
     return fin;
 }
