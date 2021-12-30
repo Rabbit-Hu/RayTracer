@@ -17,18 +17,18 @@ public:
     Prism(): Object(PRISM) {}
     ~Prism() {}
 
-    Intersection intersect(const Ray &ray) const override {
+    Intersection intersect(const Ray &ray, unsigned short *Xi) const override {
         Intersection ret, its;
         Vector3f up = cross(v[1] - v[0], v[2] - v[0]).normalized();
         Vector3f v_[3] = {v[0] + up * height, v[1] + up * height, v[2] + up * height};
-        if ((its = Triangle( v[2],  v[1],  v[0], material).intersect(ray)).t < ret.t) ret = its;
-        if ((its = Triangle(v_[0], v_[1], v_[2], material).intersect(ray)).t < ret.t) ret = its;
-        if ((its = Triangle( v[0],  v[1], v_[1], material).intersect(ray)).t < ret.t) ret = its;
-        if ((its = Triangle( v[1],  v[2], v_[2], material).intersect(ray)).t < ret.t) ret = its;
-        if ((its = Triangle( v[2],  v[0], v_[0], material).intersect(ray)).t < ret.t) ret = its;
-        if ((its = Triangle( v[1], v_[2], v_[1], material).intersect(ray)).t < ret.t) ret = its;
-        if ((its = Triangle( v[2], v_[0], v_[2], material).intersect(ray)).t < ret.t) ret = its;
-        if ((its = Triangle( v[0], v_[1], v_[0], material).intersect(ray)).t < ret.t) ret = its;
+        if ((its = Triangle( v[2],  v[1],  v[0], material).intersect(ray, Xi)).t < ret.t) ret = its;
+        if ((its = Triangle(v_[0], v_[1], v_[2], material).intersect(ray, Xi)).t < ret.t) ret = its;
+        if ((its = Triangle( v[0],  v[1], v_[1], material).intersect(ray, Xi)).t < ret.t) ret = its;
+        if ((its = Triangle( v[1],  v[2], v_[2], material).intersect(ray, Xi)).t < ret.t) ret = its;
+        if ((its = Triangle( v[2],  v[0], v_[0], material).intersect(ray, Xi)).t < ret.t) ret = its;
+        if ((its = Triangle( v[1], v_[2], v_[1], material).intersect(ray, Xi)).t < ret.t) ret = its;
+        if ((its = Triangle( v[2], v_[0], v_[2], material).intersect(ray, Xi)).t < ret.t) ret = its;
+        if ((its = Triangle( v[0], v_[1], v_[0], material).intersect(ray, Xi)).t < ret.t) ret = its;
         return ret;
     }
     friend std::istream &operator >>(std::istream &fin, Prism &prism);

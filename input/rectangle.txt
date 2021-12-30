@@ -1,4 +1,4 @@
-samp 100
+samp 1000
 save_interval 1
 
 camera
@@ -6,24 +6,14 @@ camera
     direction -2 0.6 -0.30
     up 0 0 1
     angle 30
-    width 80
-    height 40
+    width 640
+    height 480
     focus_pos 0 0 2.5
     aperture 0.4
 end
 
-# camera
-#     origin 12 -1 5.5
-#     direction 0 -0.1 -1
-#     up -1 0 0
-#     angle 80
-#     width 60
-#     height 45
-#     focus_pos 0 0 2.5
-#     aperture 0
-# end
-
 mesh ../meshes/paimon/paimon.obj
+# source: https://sketchfab.com/3d-models/paimon-idle-animation-990c9d459212467288b64e9b19c9c9b5
 
 # Anemo Slime
 sphere
@@ -47,7 +37,7 @@ prism
     v 11.5 -2.15 2.95
     height 0.1
     material
-        Kd 0.9 0.95 0.93
+        Kd 0.95 1 0.98
         # Ke 1 0 0
         Ks 0 0 0
         Ni 1000
@@ -68,6 +58,7 @@ bezier
     c 1 0
     c 0 0
     material
+        Kd 1.5 1.5 1.5
         map_Kd ../textures/slime_hydro.png
         Ni 1.5
         Ka 0.6 0.95 0.99
@@ -173,11 +164,25 @@ bezier
 end
 
 # front wall ("background" wall)
-plane
-    normal 1 0 0
-    offset -3
+# plane
+#     normal 1 0 0
+#     offset -3
+#     material
+#         Kd 0.8 0.6 0.6
+#         Ks 0 0 0
+#         Ka 0 0 0
+#         Ni 0
+#     end
+# end
+rectangle
+    position -3 -10 0
+    right 0 18 0
+    up 0 0 6
     material
-        Kd 0.8 0.6 0.6
+        repeat 6 2
+        map_Kd ../textures/wall_pink.png 
+        map_normal ../textures/wall_normal.png 
+        # source: https://blog.csdn.net/yjr3426619/article/details/81022781
         Ks 0 0 0
         Ka 0 0 0
         Ni 0
@@ -209,12 +214,40 @@ plane
 end
 
 # right wall
-plane
-    normal 0 -1 0
-    offset -4.5
+# plane
+#     normal 0 -1 0
+#     offset -4.5
+#     material
+#         Kd 0.7 0.7 0.7
+#         Ks 0 0 0
+#         # Kd 0 0 0
+#         # Ks 1 1 1
+#         Ka 0 0 0
+#         Ni 1000
+#     end
+# end
+rectangle
+    position -3 4.51 0
+    right 36 0 0
+    up 0 0 6
     material
-        # Kd 0.6 0.6 0.8
-        # Ks 0 0 0
+        repeat 12 2
+        Kd 0.65 0.8 0.8
+        map_Kd ../textures/wall_gray.png 
+        map_normal ../textures/wall_normal.png 
+        # source: https://blog.csdn.net/yjr3426619/article/details/81022781
+        Ks 0 0 0
+        Ka 0 0 0
+        Ni 0
+    end
+end
+
+# right wall mirror
+rectangle
+    position -2.5 4.5 0.5
+    up 0 0 4
+    right 6 0 0
+    material
         Kd 0 0 0
         Ks 1 1 1
         Ka 0 0 0
@@ -225,25 +258,54 @@ end
 # ceiling
 plane
     normal 0 0 -1
-    offset -5.5
+    offset -5.51
     material
-        Kd 0 0 0
-        Ke 1.5 1.5 1.5
+        # Kd 0 0 0
+        # Ke 1.5 1.5 1.5
+        Kd 1 1 1
+        Ke 0 0 0
         Ks 0 0 0
         Ka 0 0 0
         Ni 1000
     end
 end
 
-# ground
-plane
-    normal 0 0 1
-    offset 0
+# ceiling lights
+rectangle
+    position -2 -2 5.5
+    up 30 0 0
+    right 0 6 0
     material
-        # Kd 0.08 0.15 0.08
-        Kd 0.5 0.7 0.5
-        Ks 0 0 0
+        Kd 0 0 0
+        Ke 2.5 2.5 2.5
         Ka 0 0 0
         Ni 1000
+    end
+end
+
+# ground
+# plane
+#     normal 0 0 1
+#     offset 0
+#     material
+#         # Kd 0.08 0.15 0.08
+#         Kd 0.7 0.7 0.7
+#         Ks 0 0 0
+#         Ka 0 0 0
+#         Ni 1000
+#     end
+# end
+rectangle
+    position -3 5 0
+    right 0 -36 0
+    up 36 0 0
+    material
+        repeat 12 6
+        Kd 0.7 0.7 0.7
+        map_Kd ../textures/floor_yellow.png 
+        # source: https://3djungle.net/textures/laminate/3783/
+        Ks 0 0 0
+        Ka 0 0 0
+        Ni 0
     end
 end

@@ -12,7 +12,7 @@
 #include "Canvas.h"
 
 enum HitType { MISS, INTO, OUTFROM };
-enum ObjectType { AABB, SPHERE, PLANE, CYLINDER, BEZIER, TRIANGLE, MESH, PRISM };
+enum ObjectType { AABB, SPHERE, PLANE, CYLINDER, BEZIER, TRIANGLE, MESH, PRISM, RECTANGLE};
 
 class Ray {
 public:
@@ -46,12 +46,14 @@ public:
     Vector3f Kd = Vector3f(1, 1, 1), Ke = Vector3f(0, 0, 0), Ks = Vector3f(1, 1, 1), Ka = Vector3f(0, 0, 0); // ambient, diffuse, specular, emit
     double Ni = 1.45; // density
     bool dispersion = false;
-    Canvas *map_Kd = nullptr, *map_Ke = nullptr; // textures
+    Canvas *map_Kd = nullptr, *map_Ke = nullptr, *map_normal = nullptr; // textures
+    Vector2f repeat = Vector2f(1, 1);
 
     Material() {}
     ~Material() {
         if (map_Kd != nullptr) delete map_Kd; 
         if (map_Ke != nullptr) delete map_Ke;
+        if (map_normal != nullptr) delete map_normal;
     }
 
     Vector3f get_absorb() const {
@@ -59,16 +61,20 @@ public:
     }
     Vector3f get_diffuse(double u = 0, double v = 0) const {
         // if have texture map, Kd.x serves as coefficient
-        if (map_Kd != nullptr) return Kd.x * map_Kd->get_color_uv(u, v);
+        if (map_Kd != nullptr) return Kd * map_Kd->get_color_uv(u * repeat.x, v * repeat.y);
         return Kd;
     }
     Vector3f get_emit(double u = 0, double v = 0) const {
-        if (map_Ke != nullptr) return Ke.x * map_Ke->get_color_uv(u, v);
+        if (map_Ke != nullptr) return Ke * map_Ke->get_color_uv(u * repeat.x, v * repeat.y);
         return Ke;
     }   
     Vector3f get_specular() const {
         return Ks;
-    }       
+    }   
+    Vector3f get_normal(double u = 0, double v = 0) const {
+        if (map_normal != nullptr) return map_normal->get_color_uv(u * repeat.x, v * repeat.y);
+        return Vector3f(0, 0, 1);
+    }
 
     friend std::istream &operator >>(std::istream &fin, Material &material);
 };
@@ -102,11 +108,20 @@ std::istream &operator >>(std::istream &fin, Material &material) {
             material.map_Ke = new Canvas();
             material.map_Ke->read_png(material.file_dir + s);
         }
+        else if (s == "map_normal") {
+            fin >> s;
+            material.map_normal = new Canvas();
+            material.map_normal->read_png(material.file_dir + s);
+            for (int y = 0; y < material.map_normal->height(); y++)
+                for (int x = 0; x < material.map_normal->width(); x++)
+                    (*material.map_normal)[y][x] = ((*material.map_normal)[y][x] - Vector3f(.5, .5, .5)).normalized();
+        }
         else if (s == "newmtl") {
             for (int i = s.length() - 1; i >= 0; i--)
                 fin.putback(s[i]);
             break;
         }
+        else if (s == "repeat") fin >> material.repeat;
         else if (s == "dispersion") {
             int tmp;
             fin >> tmp;
@@ -133,7 +148,7 @@ public:
     Object(ObjectType _type, std::shared_ptr<Material> _material): type(_type), material(_material) {}
     virtual ~Object() {};
 
-    virtual Intersection intersect(const Ray &ray) const = 0;
+    virtual Intersection intersect(const Ray &ray, unsigned short *Xi) const = 0;
 };
 
 class Intersection {
@@ -160,7 +175,7 @@ public:
     Aabb(Vector3f _p0, Vector3f _p1): Object(AABB), p0(_p0), p1(_p1) {}
     ~Aabb() {}
 
-    Intersection intersect(const Ray &ray) const override {
+    Intersection intersect(const Ray &ray, unsigned short *Xi) const override {
         double t_enter = -INF_D, t_exit = INF_D, t0, t1;
         // std::cout << "ray = " << ray;
         // if (std::abs(ray.d.x) > EPS) {

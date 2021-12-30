@@ -21,16 +21,16 @@ public:
         // std::cout << "focus_distance = " << focus_distance << std::endl;
         aperture = aperture / 2;
     }
-    Vector2f random_in_unit_disk() {
+    Vector2f random_in_unit_disk(unsigned short *Xi) {
         Vector2f p;
         do {
-            p = 2 * Vector2f(drand48(), drand48()) - Vector2f(1, 1);
+            p = 2 * Vector2f(erand48(Xi), erand48(Xi)) - Vector2f(1, 1);
         } while (dot(p, p) > 1);
         return p;
     }
-    Ray get_ray(double x, double y) { // x, y are pixel indices; dx
+    Ray get_ray(double x, double y, unsigned short *Xi) { // x, y are pixel indices; dx
         double dx = (2.0 * (x + 0.5) / w - 1), dy = -(2.0 * (y + 0.5) / h - 1); // +0.5: center of pixel
-        Vector2f offset = random_in_unit_disk() * aperture;
+        Vector2f offset = random_in_unit_disk(Xi) * aperture;
         Vector3f ray_o = o + right * offset.x + up * offset.y;
         // std::cout << "ray_o = " << ray_o << std::endl;
         Vector3f ray_d = (d + right * (dx * w_scale - offset.x / focus_distance) + up * (dy * h_scale - offset.y / focus_distance)).normalized();

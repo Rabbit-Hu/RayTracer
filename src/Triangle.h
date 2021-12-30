@@ -32,7 +32,7 @@ public:
     double det3(const Vector3f& a, const Vector3f& b, const Vector3f& c) const {
 		return dot(cross(a, b), c);
 	}
-    Intersection intersect(const Ray &ray) const override {
+    Intersection intersect(const Ray &ray, unsigned short *Xi) const override {
         Intersection ret;
 		Vector3f E1 = v[0] - v[1], E2 = v[0] - v[2], S = v[0] - ray.o;
 		double normalize_term = 1 / det3(ray.d, E1, E2);

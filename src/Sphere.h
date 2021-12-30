@@ -18,7 +18,7 @@ public:
     Sphere(): Object(SPHERE) {}
     ~Sphere() {}
 
-    Intersection intersect(const Ray &ray) const override {
+    Intersection intersect(const Ray &ray, unsigned short *Xi) const override {
         Intersection ret;
         Vector3f op = pos - ray.o;
         double b = dot(op, ray.d), t;

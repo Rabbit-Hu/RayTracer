@@ -39,9 +39,9 @@ public:
                 if (triangles != nullptr) delete[] triangles;
             }
 
-            Intersection intersect(const Ray &ray) const {
+            Intersection intersect(const Ray &ray, unsigned short *Xi) const {
                 // if(id <= 3) std::cout << "Node " << id << ": AABB = (" << aabb.p0 << ", " << aabb.p1 << ")" << std::endl;
-                if (aabb.intersect(ray).type == MISS) {
+                if (aabb.intersect(ray, Xi).type == MISS) {
                     // std::cout << "MISS" << std::endl;
                     return Intersection();
                 }
@@ -49,7 +49,7 @@ public:
                 Intersection ret = Intersection();
                 if (n_triangles) {
                     for (int i = 0; i < n_triangles; i++) {
-                        Intersection tmp = triangles[i].intersect(ray);
+                        Intersection tmp = triangles[i].intersect(ray, Xi);
                         if (tmp.type != MISS && tmp.t < ret.t) ret = tmp;
                     }
                     return ret;
@@ -57,7 +57,7 @@ public:
                 for (int i = 0; i < 2; i++)
                     if (child[i] != nullptr) {
                         // std::cout << " entering child[" << i << "]" << std::endl;
-                        Intersection tmp = child[i]->intersect(ray);
+                        Intersection tmp = child[i]->intersect(ray, Xi);
                         if (tmp.type != MISS && tmp.t < ret.t) ret = tmp;
                     }
                 // if (ret.type == MISS) {
@@ -169,8 +169,8 @@ public:
             delete[] centers;
         }
 
-        Intersection intersect(const Ray &ray) const {
-            return root->intersect(ray);
+        Intersection intersect(const Ray &ray, unsigned short *Xi) const {
+            return root->intersect(ray, Xi);
         }
     };
     BVH *bvh;
@@ -277,8 +277,8 @@ public:
         delete bvh;
     }
 
-    Intersection intersect(const Ray &ray) const override {
+    Intersection intersect(const Ray &ray, unsigned short *Xi) const override {
         // if (aabb->intersect(ray).type == MISS) return Intersection();
-        return bvh->intersect(ray);
+        return bvh->intersect(ray, Xi);
     }
 };

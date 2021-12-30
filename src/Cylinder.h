@@ -19,7 +19,7 @@ public:
         Object(CYLINDER), pos(_pos), up(_up), right(_right), rad(_rad), y_min(_y_min), y_max(_y_max) {}
     ~Cylinder() {}
 
-    Intersection intersect(const Ray &ray) const override {
+    Intersection intersect(const Ray &ray, unsigned short *Xi) const override {
         Intersection ret;
         Vector3f o_minus_pos = ray.o - pos;
         double d_dot_up = dot(ray.d, up), o_minus_pos_dot_up = dot(o_minus_pos, up);
@@ -44,7 +44,7 @@ public:
         }
         if (ret.type == MISS) ret.t = INF_D; 
         Plane max_plane(up, dot(pos, up) + y_max), min_plane(-1 * up, -(dot(pos, up) + y_min));
-        Intersection max_its = max_plane.intersect(ray), min_its = min_plane.intersect(ray);
+        Intersection max_its = max_plane.intersect(ray, Xi), min_its = min_plane.intersect(ray, Xi);
         if (max_its.t < ret.t && (max_its.poc - (pos + y_max * up)).norm() < rad) ret = max_its;
         if (min_its.t < ret.t && (min_its.poc - (pos + y_min * up)).norm() < rad) ret = min_its;
         ret.material = material;

@@ -6,6 +6,7 @@
 #include "Sphere.h"
 #include "Cylinder.h"
 #include "Plane.h"
+#include "Rectangle.h"
 #include "Triangle.h"
 #include "Mesh.h"
 #include "Bezier.h"
@@ -57,6 +58,11 @@ public:
                 fin >> *object;
                 objects.push_back(object);
             }
+            else if (s == "rectangle") {
+                auto *object = new Rectangle();
+                fin >> *object;
+                objects.push_back(object);
+            }
             else if (s == "mesh") {
                 fin >> s;
                 auto *object = new Mesh(s);
@@ -87,10 +93,10 @@ public:
             delete object;
     }
 
-    Intersection intersect(const Ray &ray) {
+    Intersection intersect(const Ray &ray, unsigned short *Xi) {
         Intersection ret;
         for (auto &object : objects) {
-            Intersection tmp = object->intersect(ray);
+            Intersection tmp = object->intersect(ray, Xi);
             if (tmp.type != MISS && tmp.t < ret.t){
                 ret = tmp;
                 // std::cout << "ret.t = " << ret.t << ", Kd = " << ret.material->Kd << std::endl;
@@ -116,7 +122,7 @@ public:
 
     Vector3f radiance(const Ray &ray, int depth, unsigned short *Xi) {
         // std::cout << "ray = " << ray << std::endl;
-        Intersection its = intersect(ray);
+        Intersection its = intersect(ray, Xi);
         if (its.type == MISS) return Vector3f();
         if (depth >= REFLECT_LIMIT) return its.material->Ke;
         Vector3f normal = its.type == INTO ? its.normal : -1 * its.normal;
@@ -188,13 +194,18 @@ public:
         if (coeff.inf_norm() < EPS) return Vector3f();
         return radiance(ray, depth, Xi) * coeff;
     }
-    Canvas *ray_trace(int h1, int h2, int w1, int w2, int samp) {
+    Canvas *ray_trace(int h1, int h2, int w1, int w2, int samp, int seed) {
         Canvas *canvas = new Canvas(w2 - w1, h2 - h1);
         for (int y = h1; y < h2; y++){
             auto start_time = std::chrono::high_resolution_clock::now();
             // std::cout << "begin y = " << y << std::endl;
             unsigned short Xi[3]={0,0,0};
-            Xi[2] = y*y*y;
+            unsigned long long tmp = ((unsigned long long)seed * camera.h + y);
+            tmp = tmp*tmp*tmp;
+            for (int i = 0; i < 3; i++){
+                Xi[i] = tmp & 65535;
+                tmp >>= 16;
+            }
             for (int x = w1; x < w2; x++){
                 // std::cout << "x = " << x << std::endl;
                 Vector3f color;
@@ -203,7 +214,7 @@ public:
                         for (int sy = 0; sy < 2; sy++) {
                             double r1 = 2 * erand48(Xi), dx = r1 < 1 ? sqrt(r1) - 1: 1 - sqrt(2 - r1);
                             double r2 = 2 * erand48(Xi), dy = r2 < 1 ? sqrt(r2) - 1: 1 - sqrt(2 - r2);
-                            Ray ray = camera.get_ray((sx + 0.5 + dx)/2 + x, (sy + 0.5 + dy)/2 + y);
+                            Ray ray = camera.get_ray((sx + 0.5 + dx)/2 + x, (sy + 0.5 + dy)/2 + y, Xi);
                             color = color + radiance(ray, 0, Xi) * (1. / samp) * .25;
                         }
                 }
@@ -217,7 +228,8 @@ public:
         }
         return canvas;
     }
-    Canvas *ray_trace(int samp) {
-        return ray_trace(0, camera.h, 0, camera.w, samp);
+    Canvas *ray_trace(int samp, int seed=0) {
+        std::cout << "Start ray tracing ..." << std::endl;
+        return ray_trace(0, camera.h, 0, camera.w, samp, seed);
     }
 };

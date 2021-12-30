@@ -170,12 +170,12 @@ public:
         return Vector3f(a[0][3], a[1][3], a[2][3]);
     }
 
-    Intersection intersect(const Ray &ray) const override {
-        double t = exp(-1.0 * drand48() * 14 / blur); // log(1e-6) \approx 14
-        return intersect_at_time(ray, t);
+    Intersection intersect(const Ray &ray, unsigned short *Xi) const override {
+        double t = exp(-1.0 * erand48(Xi) * 14 / blur); // log(1e-6) \approx 14
+        return intersect_at_time(ray, t, Xi);
     }
 
-    Intersection intersect_at_time(const Ray &ray, double t) const {
+    Intersection intersect_at_time(const Ray &ray, double t, unsigned short *Xi) const {
         BezierCurve2D curve = start_curve.size() ? end_curve * (1 - t) + start_curve * t : end_curve;
         // std::cout << "curve:     " << curve.x_max << " " << curve.y_min << " " << curve.y_max << " " << std::endl;
         // std::cout << "end_curve: " << end_curve.x_max << " " << end_curve.y_min << " " << end_curve.y_max << " " << std::endl;
@@ -183,7 +183,7 @@ public:
 
         // test intersection with the bounding cylinder, radius = curve.x_max;
         Cylinder cyl(pos, up, right, curve.x_max * scale, curve.y_min * scale, curve.y_max * scale);
-        Intersection cyl_its = cyl.intersect(ray);
+        Intersection cyl_its = cyl.intersect(ray, Xi);
         if (cyl_its.type == MISS) return Intersection();
         Vector3f flat = cyl_its.poc - pos;
         flat = flat - dot(flat, up) * up;
@@ -191,9 +191,7 @@ public:
 
         Intersection ret;
         for (int q = 0; q < NEWTON_ATTEMPT; q++) {
-            // double t = (pos - ray.o).norm() * (1 + (drand48() - 0.5) * 0.2), u = drand48(), v = drand48();
-            // double t = cyl_its.t * (1 + (drand48() - 0.5) * 0.6), u = cyl_its_angle / (2*PI) + (drand48() - 0.5) * 0.6, v = drand48();
-            double t = cyl_its.t * (1 + (drand48() - 0.5) * 0.2), u = cyl_its_angle / (2*PI) + (drand48() - 0.5) * 0.2, v = drand48();
+            double t = cyl_its.t * (1 + (erand48(Xi) - 0.5) * 0.2), u = cyl_its_angle / (2*PI) + (erand48(Xi) - 0.5) * 0.2, v = erand48(Xi);
             for (int i = 0; i < NEWTON_ITER; i++) {
                 v = fmod(v, 2);
                 if (v < 0) v += 2;

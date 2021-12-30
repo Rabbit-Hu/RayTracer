@@ -18,7 +18,7 @@ public:
     Plane(Vector3f _normal, double _offset): Object(PLANE), normal(_normal), offset(_offset) {}
     ~Plane() {}
 
-    Intersection intersect(const Ray &ray) const override {
+    Intersection intersect(const Ray &ray, unsigned short *Xi) const override {
         Intersection ret;
         double prod = dot(normal, ray.d);
         // std::cout << "prod = " << prod << "t = " << (offset - dot(normal, ray.o)) / prod << std::endl;

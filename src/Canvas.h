@@ -60,7 +60,7 @@ public:
                 colors[y * w + x] = b.colors[(y - y1) * b.w + (x - x1)];
     }
     void read_png(const std::string &fname) {
-        std::cout << "Loading png file " << fname << " into Canvas ..." << std::endl;
+        // std::cout << "Loading png file " << fname << " into Canvas ..." << std::endl;
         if (colors != nullptr) delete[] colors;
         png::image<png::rgb_pixel> img(fname.c_str(), png::require_color_space<png::rgb_pixel>());
         w = img.get_width();
@@ -77,7 +77,7 @@ public:
         // std::cout << "Successfully loaded png file " << fname << "." << std::endl;
     }
     void write_png(const std::string &fname) {
-        std::cout << "Writing png file " << fname << " ..." << std::endl;
+        // std::cout << "Writing png file " << fname << " ..." << std::endl;
         png::image<png::rgb_pixel> img(w, h);
         for (size_t y = 0; y < h; y++)
             for (size_t x = 0; x < w; x++){
