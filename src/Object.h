@@ -115,6 +115,23 @@ std::istream &operator >>(std::istream &fin, Material &material) {
             for (int y = 0; y < material.map_normal->height(); y++)
                 for (int x = 0; x < material.map_normal->width(); x++)
                     (*material.map_normal)[y][x] = ((*material.map_normal)[y][x] - Vector3f(.5, .5, .5)).normalized();
+            // material.map_normal->write_png("../output/tmp_normal.png");
+            // exit(0);
+        }
+        else if (s == "map_bump") {
+            fin >> s;
+            Canvas *map_bump = new Canvas();
+            map_bump->read_png(material.file_dir + s);
+            material.map_normal = new Canvas(map_bump->width(), map_bump->height());
+            for (int y = 0; y < material.map_normal->height(); y++)
+                for (int x = 0; x < material.map_normal->width(); x++){
+                    Vector2f dxdy = map_bump->get_dxdy(y, x) * 10;
+                    // std::cout << dxdy << std::endl;
+                    (*material.map_normal)[y][x] = Vector3f(dxdy.x, dxdy.y, 1).normalized();
+                }
+            delete map_bump;
+            // material.map_normal->write_png("../output/tmp_bump.png");
+            // exit(0);
         }
         else if (s == "newmtl") {
             for (int i = s.length() - 1; i >= 0; i--)

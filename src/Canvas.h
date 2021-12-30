@@ -51,6 +51,9 @@ public:
                y_res *       (1 - x_res) * get_color(y_floor + 1, x_floor)     + 
                y_res *       x_res       * get_color(y_floor + 1, x_floor + 1);
     }
+    Vector2f get_dxdy(double y, double x) const {
+        return 0.5 * Vector2f(get_color(y, x + 1).x - get_color(y, x - 1).x, get_color(y + 1, x).x - get_color(y - 1, x).x);
+    }
     Vector3f get_color_uv(double u, double v) const { // u, v in [0, 1], u horizontal, v vertical
         return get_color((1 - v) * h, u * w);
     }

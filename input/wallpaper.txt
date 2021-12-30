@@ -163,6 +163,20 @@ bezier
     end
 end
 
+# a glass pillar
+cylinder
+    position 4.6 3.3 0
+    up 0 0 1
+    y_min 0
+    y_max 5.5
+    radius 0.9
+    material
+        Kd 0 0 0
+        Ka 1 1 1
+        Ni 1.5
+    end
+end
+
 # front wall ("background" wall)
 # plane
 #     normal 1 0 0
@@ -302,6 +316,7 @@ rectangle
         repeat 12 6
         # Kd 0.9 0.9 0.9
         map_Kd ../textures/floor_yellow.png 
+        map_bump ../textures/floor_bump.png 
         # source: https://3djungle.net/textures/laminate/3783/
         Ks 0 0 0
         Ka 0 0 0

@@ -70,6 +70,8 @@ int main(int argc, char* argv[]) {
     if (done_iters) output_canvas.read_png(outputFile);
 
     for (int iter = done_iters, last_save = done_iters; iter < scene.samp; iter = iter + scene.save_interval){
+        auto start_time = std::chrono::high_resolution_clock::now();
+
         Canvas canvas(scene.camera.w, scene.camera.h);
         int num_workers = 16;
         std::thread *threads[num_workers];
@@ -92,11 +94,13 @@ int main(int argc, char* argv[]) {
         log_file << iter + 1 << std::endl;
         log_file.close();
 
-        std::cout << "Saved " << outputFile << " at iteration " << iter + 1 << "/" << scene.samp << "." << std::endl;
+        auto end_time = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::ratio<60> > time_duration = end_time - start_time;
+        std::cout << "Saved " << outputFile << " at iteration " << iter + 1 << "/" << scene.samp << ", duration = " <<  time_duration.count() << " minutes" << std::endl;
     }
     
-    // int h0 = 0 * scene.camera.h, h1 = 0.1 * scene.camera.h, w0 = 0.9 * scene.camera.w, w1 = 1 * scene.camera.w;
-    // Canvas *subcanvas = scene.ray_trace(h0, h1, w0, w1, 50, 0);
+    // int h0 = 0.9 * scene.camera.h, h1 = 1. * scene.camera.h, w0 = 0.4 * scene.camera.w, w1 = 0.5 * scene.camera.w;
+    // Canvas *subcanvas = scene.ray_trace(h0, h1, w0, w1, 10, 0);
     // output_canvas.set_submatrix(*subcanvas, h0, w0);
     // output_canvas.write_png(outputFile);
 

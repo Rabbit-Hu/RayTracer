@@ -135,6 +135,7 @@ public:
         double Ni = its.material->Ni;
 
         // std::cout << "diffuse_color = " << diffuse_color << std::endl;
+        // return normal;
         // return diffuse_color; // uncomment this for testing...
 
         // Refraction and Reflection
