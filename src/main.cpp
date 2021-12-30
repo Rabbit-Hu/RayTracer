@@ -94,12 +94,11 @@ int main(int argc, char* argv[]) {
 
         std::cout << "Saved " << outputFile << " at iteration " << iter + 1 << "/" << scene.samp << "." << std::endl;
     }
-    // canvas.write_png(outputFile);
     
-    // int h0 = 95./300 * scene.camera.h, h1 = 115./300 * scene.camera.h, w0 = 203./400 * scene.camera.w, w1 = 226./400 * scene.camera.w;
-    // Canvas *subcanvas = scene.ray_trace(h0, h1, w0, w1);
-    // canvas.set_submatrix(*subcanvas, h0, w0);
-    // canvas.write_png(outputFile);
+    // int h0 = 0 * scene.camera.h, h1 = 0.1 * scene.camera.h, w0 = 0.9 * scene.camera.w, w1 = 1 * scene.camera.w;
+    // Canvas *subcanvas = scene.ray_trace(h0, h1, w0, w1, 50, 0);
+    // output_canvas.set_submatrix(*subcanvas, h0, w0);
+    // output_canvas.write_png(outputFile);
 
     return 0;
 }

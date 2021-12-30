@@ -68,8 +68,8 @@ end
 
 # hydro slime's drips 1
 sphere
-    position 0 -2.5 2
-    radius 0.2
+    position 0 -2.25 2
+    radius 0.25
     material
         Kd 0 0.10 0.15
         # Ke 1 0 0
@@ -82,7 +82,7 @@ end
 # hydro slime's drips 2
 sphere
     position 1 -1 3
-    radius 0.15
+    radius 0.2
     material
         Kd 0 0.10 0.15
         # Ke 1 0 0
@@ -95,7 +95,7 @@ end
 # hydro slime's drips 3
 sphere
     position 1.75 -0.3 1.5
-    radius 0.25
+    radius 0.3
     material
         Kd 0 0.10 0.15
         # Ke 1 0 0
@@ -107,8 +107,8 @@ end
 
 # hydro slime's drips 4
 sphere
-    position 2.5 -2.5 0.35
-    radius 0.3
+    position 3.375 -2.625 0.4
+    radius 0.34
     material
         Kd 0 0.10 0.15
         # Ke 1 0 0
@@ -175,17 +175,16 @@ end
 #     end
 # end
 rectangle
-    position -3 -10 0
-    right 0 18 0
-    up 0 0 6
+    position -3 -18 -1.3
+    right 0 27 0
+    up 0 0 9
     material
-        repeat 6 2
-        map_Kd ../textures/wall_pink.png 
-        map_normal ../textures/wall_normal.png 
-        # source: https://blog.csdn.net/yjr3426619/article/details/81022781
-        Ks 0 0 0
+        repeat 2.2 1.3
+        map_Kd ../textures/wallpaper.png
+        # source: "Moon over Monstadt" by Sevenix2 https://www.reddit.com/r/Genshin_Impact/comments/okqdv9/moon_over_monstadt/
+        Ks 0.1 0.1 0.1
         Ka 0 0 0
-        Ni 0
+        Ni 1000
     end
 end
 
@@ -233,7 +232,7 @@ rectangle
     material
         repeat 12 2
         # Kd 0.65 0.8 0.8
-        map_Kd ../textures/wall_yellow.png 
+        map_Kd ../textures/wall_pink.png 
         map_normal ../textures/wall_normal.png 
         # source: https://blog.csdn.net/yjr3426619/article/details/81022781
         Ks 0 0 0

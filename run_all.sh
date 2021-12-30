@@ -13,5 +13,6 @@ mkdir ../output
 # ./RayTracer ../input/paimon.txt ../output/paimon.png
 # ./RayTracer ../input/slime.txt ../output/slime.png
 # ./RayTracer ../input/prism.txt ../output/prism.png
-./RayTracer ../input/rectangle.txt ../output/rectangle.png
+# ./RayTracer ../input/rectangle.txt ../output/rectangle.png
+./RayTracer ../input/wallpaper.txt ../output/wallpaper.png
 cd ..

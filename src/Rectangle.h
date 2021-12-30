@@ -23,13 +23,13 @@ public:
     Intersection intersect(const Ray &ray, unsigned short *Xi) const override {
         Intersection ret = plane.intersect(ray, Xi);
         if (ret.type == MISS) return Intersection();
-        ret.u = dot(ret.poc - pos, right) / w, ret.v = 1 - dot(ret.poc - pos, up) / h;
+        ret.u = dot(ret.poc - pos, right) / w, ret.v = dot(ret.poc - pos, up) / h;
         if (ret.u >= 0 && ret.u <= 1 && ret.v >= 0 && ret.v <= 1) {
             ret.material = material;
             if (ret.type == OUTFROM) ret.normal = ret.normal * -1, ret.type = INTO;
             Vector3f normal_texture = material->get_normal(ret.u, ret.v);
             // std::cout << "normal_texture = " << normal_texture << std::endl;
-            ret.normal = normal_texture.x * right + normal_texture.y * up + normal_texture.z * ret.normal;
+            ret.normal = normal_texture.x * right - normal_texture.y * up + normal_texture.z * ret.normal;
             return ret;
         }
         return Intersection();
